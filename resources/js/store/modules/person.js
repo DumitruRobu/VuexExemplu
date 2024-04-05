@@ -1,3 +1,4 @@
+import router from '../../router';
 const state = { //de la data,
     person:null,
     people:null,
@@ -15,12 +16,32 @@ const getters = {
 const actions = { //de la methods
 
     getPerson({state, commit, dispatch}, id){
-        console.log('111');
-        axios.get(`/api/getEmployee/${id}`).then(res =>{
+        axios.get(`/api/getPerson/${id}`).then(res =>{
             commit('setPerson', res.data.data);
-            console.log('2222');
         })
     },
+    addPerson({},data){
+        axios.post("/api/adauga", {name:data.name, job:data.job, age:data.age}).then(res =>{
+            router.push({name:'ViewAll'});
+        })
+    },
+    editPerson({},data){
+        axios.post(`/api/editPerson/${data.id}`,
+            {name:data.name, job:data.job, age:data.age}).then(res =>{
+            router.push({name:'ViewAll'});
+
+        })
+    },
+    selectAll({commit}){
+        axios.get('/api/all').then(res => {
+            commit('setPeople', res.data.data);
+        })
+    },
+    deletePerson({dispatch},id){
+        axios.delete(`/api/delete/${id}`).then(res =>{
+            dispatch('selectAll');
+        })
+    }
 
 }
 

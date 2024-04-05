@@ -4,7 +4,11 @@
         <input class="buton" type="text" placeholder="name..." v-model="name">
         <input class="buton" type="text" placeholder="job..." v-model="job">
         <input class="buton" type="number" placeholder="age..." v-model="age">
-        <input class="btn btn-success" value="Adauga" @click.prevent="addPerson">
+        <input class="btn btn-success" value="Adauga" @click.prevent="$store.dispatch('addPerson', {name:name,job:job,age:age})">
+
+<!--        rindul 7 merge si asa prescurtat:-->
+<!--        <input class="btn btn-success" value="Adauga" @click.prevent="$store.dispatch('addPerson', {name,job,age})">-->
+
     </table>
 </template>
 
@@ -16,14 +20,6 @@ export default {
             name:null,
             job:null,
             age:null,
-        }
-    },
-    methods:{
-        addPerson(){
-            axios.post("/api/adauga", {name:this.name, job:this.job, age:this.age}).then(res =>{
-                console.log("Person has been added successfully!");
-                this.$router.push({name:'ViewAll'});
-            })
         }
     }
 }

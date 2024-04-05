@@ -10,19 +10,13 @@
 <script>
 export default {
     name: "PersonComponent",
-    data(){
-        return {
-            person:null,
-        }
-    },
+
     mounted(){
-        this.getPerson()
+        this.$store.dispatch('getPerson', this.$route.params.id);
     },
-    methods:{
-        getPerson(){
-            axios.get(`/api/getPerson/${this.$route.params.id}`).then(res =>{
-                this.person = res.data.data;
-            })
+    computed:{
+        person(){
+            return this.$store.getters.person
         }
     }
 

@@ -1,76 +1,61 @@
 <template>
-    <table v-if="person" id="editTable">
-        <input class="buton" type="text" placeholder="name..." v-model="person.name">
-        <input class="buton" type="text" placeholder="job..." v-model="person.job">
-        <input class="buton" type="number" placeholder="age..." v-model="person.age">
-        <div>
-            <button><router-link :to="{name:'ViewAll'}">Back</router-link></button>
-            <button @click.prevent="editPerson">Edit</button>
-        </div>
+    <div id="mainEditDiv" v-if="person">
+        <input type="text" placeholder="name..." v-model="person.name">
+        <input type="text" placeholder="job..." v-model="person.job">
+        <input type="number" placeholder="age..." v-model="person.age">
 
-    </table>
+        <div id="subEditDiv">
+
+            <router-link :to="{name:'PersonsPage', params:{id:person.id}}" class="btn btn-warning">Back</router-link>
+            <input class="btn btn-success" value="Update"
+                   @click.prevent="$store.dispatch('editPerson', {id:person.id, name:person.name, age:person.age, job:person.job})">
+
+        </div>
+    </div>
 </template>
 
 <script>
 export default {
     name: "EditComponent",
-    data(){
-        return {
-               person:null,
+    mounted() {
+        this.$store.dispatch('getPerson', this.$route.params.id)
+    },
+    computed: {
+        person() {
+            return this.$store.getters.person;
         }
     },
-    mounted(){
-        this.getPerson();
-    },
-    methods:{
-        getPerson(){
-            axios.get(`/api/getPerson/${this.$route.params.id}`).then(res =>{
-                this.person = res.data.data;
-            })
-        },
-        editPerson(){
-            axios.post(`/api/editPerson/${this.person.id}`,
-                {name:this.person.name, job:this.person.job, age:this.person.age}).then(res =>{
-                    console.log("Person has been successfully edited!");
-                    this.$router.push({name:'ViewAll'});
 
-            })
-        }
-    }
 }
 </script>
 
-
 <style scoped>
-#editTable{
-    display:flex;
-    flex-direction: column;
-    gap:5px;
-    align-items:center;
+    #mainEditDiv{
+        display:flex;
+        flex-direction: column;
 
-
-}
-#editTable button{
-    width: 80px;
-    margin:10px;
-    outline:none;
-    border-radius:5px;
-    border:1px solid black;
-    padding:5px;
-    background-color: #d4d454;
-}
-#editTable button:hover{
-    background-color: #39ad39;
-    transition: 1s linear;
-    color:white;
-}
-#editTable input{
-    width:250px;
-    padding:5px;
-    background-color: gainsboro;
-    outline:none;
-    border: 1px solid black;
-    border-radius:5px;
-}
-
+        justify-content: center;
+        align-items: center;
+        margin:auto;
+    }
+    #mainEditDiv input{
+        width:300px;
+    }
+    #subEditDiv{
+        display:flex;
+        width:150px;
+        gap:10px;
+    }
+    #subEditDiv input{
+        width: 100px;
+    }
 </style>
+
+
+<!--public function __invoke(EditPersonRequest $request, $id)-->
+<!--{-->
+<!--$data = $request->validated();-->
+<!--$person = Employee::findOrFail($id);-->
+<!--$person->update($data);-->
+<!--return $person;-->
+<!--}-->

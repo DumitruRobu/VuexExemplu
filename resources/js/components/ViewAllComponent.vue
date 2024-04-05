@@ -14,7 +14,7 @@
             <td>{{p.job}}</td>
             <td>{{p.age}}</td>
             <td><router-link :to="{name:'Edit', params:{id:p.id}}">Edit</router-link> </td>
-            <td><button @click.prevent="deletePerson(p.id)">Delete</button> </td>
+            <td><button @click.prevent="$store.dispatch('deletePerson', p.id)">Delete</button> </td>
 
         </tr>
     </table>
@@ -23,26 +23,15 @@
 <script>
 export default {
     name: "TagComponent",
-    data(){
-      return{
-          people:null,
-      }
-    },
-    mounted() {
-        this.selectAll();
-    },
-    methods:{
-        selectAll(){
-            axios.get('/api/all').then(res => {
-                this.people = res.data.data;
-            })
-        },
-        deletePerson(id){
-            axios.delete(`/api/delete/${id}`).then(res =>{
-                this.selectAll();
-            })
+    computed:{
+        people(){
+            return this.$store.getters.people;
         }
     },
+    mounted() {
+        this.$store.dispatch('selectAll');
+    },
+
 
 }
 </script>
